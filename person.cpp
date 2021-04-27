@@ -6,7 +6,7 @@ using std::cout;
 using std::endl;
 
 Person::Person(const char *name_, Person* father_, Person* mother_){
-    name = new char[strlen(name_)];
+    name = new char[strlen(name_) + 1];
     strcpy(name, name_);
     father = father_;
     mother = mother_;
@@ -19,6 +19,10 @@ Person::~Person(){
     delete[] name;
     delete father;
     delete mother;
+    for(int i = 0; i < sizeof children; i++)
+    {
+	delete children[i];
+    }
     delete[] children;
 }
 
@@ -70,6 +74,7 @@ char* Person::compute_relation(int level){
     for(int i = 2; i <= level; i++){
         char *temp2 = new char[strlen("great ") + strlen(temp) + 1];
         strcat(strcpy(temp2, "great "), temp);
+	delete [] temp;
         temp = temp2;
     }
     return temp;
@@ -81,6 +86,7 @@ char* Person::compute_relation(int level){
 void expand(Person ***t, int *MAX){
   Person **temp = new Person*[2 * *MAX];
   memcpy(temp, *t, *MAX * sizeof(**t));
+  delete [] *t;
   *MAX *= 2;
   *t = temp;
 }
